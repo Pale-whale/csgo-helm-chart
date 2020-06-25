@@ -7,11 +7,11 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: {{ .Values.game_port }}
-      targetPort: {{ .Values.game_port }}
-      nodePort: {{ .Values.game_port }}
-      protocol: TCP
-      name: game-tcp
+    #- port: {{ .Values.game_port }}
+    #  targetPort: {{ .Values.game_port }}
+    #  nodePort: {{ .Values.game_port }}
+    #  protocol: TCP
+    #  name: game-tcp
     - port: {{ .Values.game_port }}
       targetPort: {{ .Values.game_port }}
       nodePort: {{ .Values.game_port }}
