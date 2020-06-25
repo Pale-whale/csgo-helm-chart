@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "csgo.fullname" . }}
+  labels:
+    {{- include "csgo.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.game_port }}
+      targetPort: {{ .Values.game_port }}
+      nodePort: {{ .Values.game_port }}
+      protocol: TCP
+      name: game-tcp
+    - port: {{ .Values.game_port }}
+      targetPort: {{ .Values.game_port }}
+      nodePort: {{ .Values.game_port }}
+      protocol: UDP
+      name: game-udp
+    - port: {{ .Values.tv_port }}
+      targetPort: {{ .Values.tv_port }}
+      nodePort: {{ .Values.tv_port }}
+      protocol: UDP
+      name: tv
+    - port: {{ .Values.client_port }}
+      targetPort: {{ .Values.client_port }}
+      nodePort: {{ .Values.client_port }}
+      protocol: UDP
+      name: client
+  selector:
+    {{- include "csgo.selectorLabels" . | nindent 4 }}

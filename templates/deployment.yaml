@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "csgo.fullname" . }}
+  labels:
+    {{- include "csgo.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "csgo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "csgo.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "csgo.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command:
+            - "bash"
+            - "-c"
+            - >-
+              mkdir -p /home/steam/csgo-dedicated/csgo;
+              wget https://raw.githubusercontent.com/CM2Walki/CSGO/master/etc/entry.sh -O /home/steam/csgo-dedicated/entry.sh;
+              chmod 755 /home/steam/csgo-dedicated/entry.sh;
+              {
+                echo '@ShutdownOnFailedCommand 1';
+                echo '@NoPromptForPassword 1';
+                echo 'login anonymous';
+                echo 'force_install_dir /home/steam/csgo-dedicated';
+                echo 'app_update /home/steam/csgo-dedicated';
+                echo 'quit';
+              } > /home/steam/csgo-dedicated/csgo_update.txt;
+              wget -qO- https://raw.githubusercontent.com/CM2Walki/CSGO/master/etc/cfg.tar.gz | tar xvzf - -C "/home/steam/csgo-dedicated/csgo";
+              sed -i  's/eslgotv.cfg/esl5on5.cfg/g' /home/steam/csgo-dedicated/csgo/cfg/server.cfg;
+              /home/steam/csgo-dedicated/entry.sh
+          env:
+          - name: SRCDS_TOKEN
+            value: {{ .Values.login_token | quote }}
+          - name: SRCDS_PORT
+            value: {{ .Values.game_port | quote }}
+          - name: SRCDS_TV_PORT
+            value: {{ .Values.tv_port | quote }}
+          - name: SRCDS_CLIENT_PORT
+            value: {{ .Values.client_port | quote }}
+          - name: SRCDS_TICKRATE
+            value: {{ .Values.tickrate | quote }}
+          - name: SRCDS_MAXPLAYERS
+            value: {{ .Values.max_players | quote }}
+          - name: SRCDS_STARTMAP
+            value: {{ .Values.start_map | quote }}
+          - name: SRCDS_HOSTNAME
+            value: {{ .Values.name | quote }}
+          - name: SRCDS_NET_PUBLIC_ADDRESS
+            value: {{ .Values.public_ip | quote }}
+          - name: SRCDS_RCONPW
+            value: {{ .Values.server_password | quote }}
+          - name: SRCDS_PW
+            value: {{ .Values.server_password | quote }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: game-tcp
+              containerPort: {{ .Values.game_port }}
+              protocol: TCP
+            - name: game-udp
+              containerPort: {{ .Values.game_port }}
+              protocol: UDP
+            - name: tv
+              containerPort: {{ .Values.tv_port }}
+              protocol: UDP
+            - name: client
+              containerPort: {{ .Values.client_port }}
+              protocol: UDP
+              #livenessProbe:
+              #httpGet:
+              #path: /
+              #port: http
+              #readinessProbe:
+              #httpGet:
+              #path: /
+              #port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          - mountPath: /home/steam/csgo-dedicated/
+            name: game-data
+      volumes:
+      - name: game-data
+        persistentVolumeClaim:
+          claimName: {{ include "csgo.fullname" . }}-game-data
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

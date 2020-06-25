@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "csgo.fullname" . }}-game-data
+spec:
+  accessModes:
+  - {{ .Values.game_data.access_mode }}
+  resources:
+    requests:
+      storage: {{ .Values.game_data.storage_size }}
+  storageClassName: {{ .Values.game_data.storage_class }}
+
