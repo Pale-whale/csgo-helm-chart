@@ -4,14 +4,20 @@
 
 login_token: ""
 server_password: ""
+rcon_password: ""
 public_ip: ""
 tickrate: 128
 max_players: 10
 start_map: "de_train"
 name: ""
 game_port: 30015
+rcon_port: 30016
 tv_port: 30020
 client_port: 30005
+
+workshop_collection: 904003008
+workshop_start_map: 442116172
+workshop_authkey: ""
 
 replicaCount: 1
 

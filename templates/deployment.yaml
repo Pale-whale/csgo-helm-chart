@@ -46,7 +46,6 @@ spec:
                 echo 'quit';
               } > /home/steam/csgo-dedicated/csgo_update.txt;
               wget -qO- https://raw.githubusercontent.com/CM2Walki/CSGO/master/etc/cfg.tar.gz | tar xvzf - -C "/home/steam/csgo-dedicated/csgo";
-              sed -i  's/eslgotv.cfg/esl5on5.cfg/g' /home/steam/csgo-dedicated/csgo/cfg/server.cfg;
               /home/steam/csgo-dedicated/entry.sh
           env:
           - name: SRCDS_TOKEN
@@ -68,17 +67,23 @@ spec:
           - name: SRCDS_NET_PUBLIC_ADDRESS
             value: {{ .Values.public_ip | quote }}
           - name: SRCDS_RCONPW
-            value: {{ .Values.server_password | quote }}
+            value: {{ .Values.rcon_password | quote }}
           - name: SRCDS_PW
             value: {{ .Values.server_password | quote }}
+          - name: SRCDS_HOST_WORKSHOP_COLLECTION
+            value: {{ .Values.workshop_collection | quote }}
+          - name: SRCDS_WORKSHOP_START_MAP
+            value: {{ .Values.workshop_start_map | quote }}
+          - name: SRCDS_WORKSHOP_AUTHKEY
+            value: {{ .Values.workshop_authkey | quote }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: game-tcp
+            - name: rcon
               containerPort: {{ .Values.game_port }}
               protocol: TCP
-            - name: game-udp
+            - name: game
               containerPort: {{ .Values.game_port }}
               protocol: UDP
             - name: tv

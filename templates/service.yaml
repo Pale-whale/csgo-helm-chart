@@ -7,16 +7,16 @@ metadata:
 spec:
   type: NodePort
   ports:
-    #- port: {{ .Values.game_port }}
-    #  targetPort: {{ .Values.game_port }}
-    #  nodePort: {{ .Values.game_port }}
-    #  protocol: TCP
-    #  name: game-tcp
+    - port: {{ .Values.game_port }}
+      targetPort: {{ .Values.rcon_port }}
+      nodePort: {{ .Values.rcon_port }}
+      protocol: TCP
+      name: rcon
     - port: {{ .Values.game_port }}
       targetPort: {{ .Values.game_port }}
       nodePort: {{ .Values.game_port }}
       protocol: UDP
-      name: game-udp
+      name: game
     - port: {{ .Values.tv_port }}
       targetPort: {{ .Values.tv_port }}
       nodePort: {{ .Values.tv_port }}
