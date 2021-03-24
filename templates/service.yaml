@@ -5,14 +5,15 @@ metadata:
   labels:
     {{- include "csgo.labels" . | nindent 4 }}
 spec:
+  type: NodePort
   ports:
     - port: {{ .Values.game_port }}
-      targetPort: {{ .Values.rcon_port }}
-      nodePort: {{ .Values.rcon_port }}
+      targetPort: 27015
+      nodePort: {{ .Values.game_port }}
       protocol: TCP
       name: rcon
     - port: {{ .Values.game_port }}
-      targetPort: {{ .Values.game_port }}
+      targetPort: 27015
       nodePort: {{ .Values.game_port }}
       protocol: UDP
       name: game

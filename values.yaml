@@ -18,14 +18,6 @@ workshop_collection: 904003008
 workshop_start_map: 442116172
 workshop_authkey: ""
 
-udp_ingress:
-  enabled: true
-  entrypoint: csgoudp
-
-tcp_ingress:
-  enabled: true
-  entrypoint: csgotcp
-
 
 replicaCount: 1
 

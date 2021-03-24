@@ -51,7 +51,7 @@ spec:
           - name: SRCDS_TOKEN
             value: {{ .Values.login_token | quote }}
           - name: SRCDS_PORT
-            value: {{ .Values.game_port | quote }}
+            value: "27015"
           - name: SRCDS_TV_PORT
             value: {{ .Values.tv_port | quote }}
           - name: SRCDS_CLIENT_PORT
