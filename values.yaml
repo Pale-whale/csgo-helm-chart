@@ -14,8 +14,8 @@ game_port: 27015
 tv_port: 27020
 client_port: 27005
 
-workshop_collection: 904003008
-workshop_start_map: 442116172
+workshop_collection: "904003008"
+workshop_start_map: "442116172"
 workshop_authkey: ""
 
 
