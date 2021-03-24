@@ -10,14 +10,22 @@ tickrate: 128
 max_players: 10
 start_map: "de_train"
 name: ""
-game_port: 30015
-rcon_port: 30016
-tv_port: 30020
-client_port: 30005
+game_port: 27015
+tv_port: 27020
+client_port: 27005
 
 workshop_collection: 904003008
 workshop_start_map: 442116172
 workshop_authkey: ""
+
+udp_ingress:
+  enabled: true
+  entrypoint: csgoudp
+
+tcp_ingress:
+  enabled: true
+  entrypoint: csgotcp
+
 
 replicaCount: 1
 
@@ -57,20 +65,6 @@ game_data:
   storage_class: nfs
   access_mode: ReadWriteMany
   storage_size: 35Gi
-
-ingress:
-  enabled: false
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: csgo.example.com
-      paths: 
-        - /
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
